@@ -2,6 +2,9 @@
 #include <GLFW/glfw3.h>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include <cstdio>
 #include <fstream>
@@ -203,17 +206,26 @@ int main(int argc, char* argv[])
     glVertexAttribPointer(vTexCoord, 2, GL_FLOAT, GL_FALSE, 7*sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
     glEnableVertexAttribArray(vTexCoord);
 
+    // active texture
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, Textures[Container]);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, Textures[Face]);
+
+    
+
     while (!glfwWindowShouldClose(window))
     {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, Textures[Container]);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, Textures[Face]);
-
         glBindVertexArray(VAOs[Triangle]);
+        float time = (float) glfwGetTime();
+        glm::mat4 trans(1.0f);
+        trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+        trans = glm::rotate(trans, glm::radians(time * 10), glm::vec3(0.0f, 0.0f, 1.0f));
+        GLuint location = glGetUniformLocation(program, "transform");
+        glUniformMatrix4fv(location, 1, false, glm::value_ptr(trans));
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
         glfwSwapBuffers(window);

@@ -1,0 +1,1 @@
+/usr/bin/c++  -g  -rdynamic CMakeFiles/glm_test.dir/src/glm_test.cpp.o  -o bin/glm_test 

@@ -123,6 +123,19 @@ hello_window/fast:
 	$(MAKE) -f CMakeFiles/hello_window.dir/build.make CMakeFiles/hello_window.dir/build
 .PHONY : hello_window/fast
 
+#=============================================================================
+# Target rules for targets named glm_test
+
+# Build rule for target.
+glm_test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 glm_test
+.PHONY : glm_test
+
+# fast build rule for target.
+glm_test/fast:
+	$(MAKE) -f CMakeFiles/glm_test.dir/build.make CMakeFiles/glm_test.dir/build
+.PHONY : glm_test/fast
+
 glad/src/glad.o: glad/src/glad.c.o
 
 .PHONY : glad/src/glad.o
@@ -149,6 +162,33 @@ glad/src/glad.s: glad/src/glad.c.s
 glad/src/glad.c.s:
 	$(MAKE) -f CMakeFiles/hello_window.dir/build.make CMakeFiles/hello_window.dir/glad/src/glad.c.s
 .PHONY : glad/src/glad.c.s
+
+src/glm_test.o: src/glm_test.cpp.o
+
+.PHONY : src/glm_test.o
+
+# target to build an object file
+src/glm_test.cpp.o:
+	$(MAKE) -f CMakeFiles/glm_test.dir/build.make CMakeFiles/glm_test.dir/src/glm_test.cpp.o
+.PHONY : src/glm_test.cpp.o
+
+src/glm_test.i: src/glm_test.cpp.i
+
+.PHONY : src/glm_test.i
+
+# target to preprocess a source file
+src/glm_test.cpp.i:
+	$(MAKE) -f CMakeFiles/glm_test.dir/build.make CMakeFiles/glm_test.dir/src/glm_test.cpp.i
+.PHONY : src/glm_test.cpp.i
+
+src/glm_test.s: src/glm_test.cpp.s
+
+.PHONY : src/glm_test.s
+
+# target to generate assembly for a file
+src/glm_test.cpp.s:
+	$(MAKE) -f CMakeFiles/glm_test.dir/build.make CMakeFiles/glm_test.dir/src/glm_test.cpp.s
+.PHONY : src/glm_test.cpp.s
 
 src/hello_window.o: src/hello_window.cpp.o
 
@@ -184,11 +224,15 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
-	@echo "... hello_window"
 	@echo "... edit_cache"
+	@echo "... hello_window"
+	@echo "... glm_test"
 	@echo "... glad/src/glad.o"
 	@echo "... glad/src/glad.i"
 	@echo "... glad/src/glad.s"
+	@echo "... src/glm_test.o"
+	@echo "... src/glm_test.i"
+	@echo "... src/glm_test.s"
 	@echo "... src/hello_window.o"
 	@echo "... src/hello_window.i"
 	@echo "... src/hello_window.s"
