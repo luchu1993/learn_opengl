@@ -1,0 +1,1 @@
+/usr/bin/c++  -g  -rdynamic CMakeFiles/hello_window.dir/src/hello_window.cpp.o CMakeFiles/hello_window.dir/glad/src/glad.c.o  -o bin/hello_window -lGL -ldl -lglfw 
