@@ -15,23 +15,99 @@
 using namespace std;
 
 bool wireFrame = false;
+int ScreenWidth = 800;
+int ScreenHeight = 600;
+
+enum VAO_IDs { Triangle, NumVAOs };
+enum Buffer_IDs { ArrayBuffer, IndexBuffer, NumBuffers };
+enum Texture_IDs { Container, Face, NumTextures };
+
+GLuint VAOs[NumVAOs];
+GLuint Buffers[NumBuffers];
+GLuint Textures[NumTextures];
+
+enum { vPosition, vTexCoord };
+
+const GLfloat vertices[] = {
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+};
+
+glm::vec3 CameraPos(0.0f, 0.0f, 5.0f);
+glm::vec3 Front(0.0f, 0.0f, -1.0f);
+glm::vec3 Up(0.0f, 1.0f, 0.0f);
+float CameraSpeed = 5.0f;
+
+float lastTime = 0.0f;
 
 static void framebuffer_resize_callback(GLuint width, GLuint height)
 {
-    glViewport(0, 0, width, height);
+    ScreenWidth = width;
+    ScreenHeight = height;
+    glViewport(0, 0, ScreenWidth, ScreenHeight);
 }
 
-static void key_callback(GLFWwindow* window, int key, int scancodes, int action, int mods)
+void processInput(GLFWwindow *window, float deltaTime)
 {
-    if (key == GLFW_KEY_ESCAPE)
-    {
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-    } 
-    else if (key == GLFW_KEY_Q && action == GLFW_PRESS) 
+    if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
     {
         glPolygonMode(GL_FRONT_AND_BACK, wireFrame ? GL_FILL : GL_LINE);
         wireFrame = !wireFrame;
-    } 
+    }
+    // move camera
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        CameraPos += Front * CameraSpeed * deltaTime;
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        CameraPos -= Front * CameraSpeed * deltaTime;
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        CameraPos -= glm::normalize(glm::cross(Front, Up)) * CameraSpeed * deltaTime;
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        CameraPos += glm::normalize(glm::cross(Front, Up)) * CameraSpeed * deltaTime;
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+        CameraPos += Up * CameraSpeed * deltaTime;
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+        CameraPos -= Up * CameraSpeed * deltaTime;
 }
 
 typedef struct {
@@ -125,29 +201,6 @@ GLuint LoadTexture(const char* image)
     return texture;
 }
 
-enum VAO_IDs { Triangle, NumVAOs };
-enum Buffer_IDs { ArrayBuffer, IndexBuffer, NumBuffers };
-enum Texture_IDs { Container, Face, NumTextures };
-
-GLuint VAOs[NumVAOs];
-GLuint Buffers[NumBuffers];
-GLuint Textures[NumTextures];
-
-enum { vPosition, vColor, vTexCoord };
-
-const GLfloat vertices[] = {
-    // vPosition  // vColor         // vTexCoord
-    -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-     0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-     0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-    -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f
-};
-
-const GLuint indices[] = {
-    0, 1, 2,
-    0, 2, 3
-};
-
 int main(int argc, char* argv[])
 {
     glfwInit();
@@ -156,7 +209,7 @@ int main(int argc, char* argv[])
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // create glfw window
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Learn OpenGL", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(ScreenWidth, ScreenHeight, "Learn OpenGL", nullptr, nullptr);
     if (window == nullptr)
     {
         cout << "Can't create glfw window!" << endl;
@@ -171,8 +224,8 @@ int main(int argc, char* argv[])
     }
 
     GLFWframebuffersizefun(framebuffer_resize_callback);
-    glfwSetKeyCallback(window, key_callback);
-    glViewport(0, 0, 800, 600);
+    glViewport(0, 0, ScreenWidth, ScreenHeight);
+    glEnable(GL_DEPTH_TEST);
 
     GLint max_combined_texture_image_uints = 0;
     glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &max_combined_texture_image_uints);
@@ -185,9 +238,6 @@ int main(int argc, char* argv[])
     glGenBuffers(NumBuffers, Buffers);
     glBindBuffer(GL_ARRAY_BUFFER, Buffers[ArrayBuffer]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    // create Element Buffer Object
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Buffers[IndexBuffer]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
     // create Texture Object
     Textures[Container] = LoadTexture("images/container.jpg");
     Textures[Face] = LoadTexture("images/face.png");
@@ -198,12 +248,10 @@ int main(int argc, char* argv[])
     glUniform1i(glGetUniformLocation(program, "sampler0"), 0);
     glUniform1i(glGetUniformLocation(program, "sampler1"), 1);
 
-    // pipeline assamble
-    glVertexAttribPointer(vPosition, 2, GL_FLOAT, GL_FALSE, 7*sizeof(GLfloat), nullptr);
+    // pipeline assemble
+    glVertexAttribPointer(vPosition, 3, GL_FLOAT, GL_FALSE, 5*sizeof(GLfloat), nullptr);
     glEnableVertexAttribArray(vPosition);
-    glVertexAttribPointer(vColor, 3, GL_FLOAT, GL_FALSE, 7*sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
-    glEnableVertexAttribArray(vColor);
-    glVertexAttribPointer(vTexCoord, 2, GL_FLOAT, GL_FALSE, 7*sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
+    glVertexAttribPointer(vTexCoord, 2, GL_FLOAT, GL_FALSE, 5*sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
     glEnableVertexAttribArray(vTexCoord);
 
     // active texture
@@ -212,24 +260,38 @@ int main(int argc, char* argv[])
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, Textures[Face]);
 
-    
-
+    GLint location;
     while (!glfwWindowShouldClose(window))
     {
+        float currentTime = (float) glfwGetTime();
+        processInput(window, currentTime - lastTime);
+        // clear framebuffer
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // model matrix
+        glm::mat4 model(1.0f);
+        model = glm::rotate(model, glm::radians(35.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, -0.5f));
+        // view matrix
+        glm::mat4 view(1.0f);
+        view = glm::lookAt(CameraPos, CameraPos+Front, Up);
+        // projection matrix
+        glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)ScreenWidth/(float)ScreenHeight, 0.1f, 100.0f);
+        // set uniform values
+        location = glGetUniformLocation(program, "model");
+        glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(model));
+        location = glGetUniformLocation(program, "view");
+        glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(view));
+        location = glGetUniformLocation(program, "projection");
+        glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(projection));
 
         glBindVertexArray(VAOs[Triangle]);
-        float time = (float) glfwGetTime();
-        glm::mat4 trans(1.0f);
-        trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
-        trans = glm::rotate(trans, glm::radians(time * 10), glm::vec3(0.0f, 0.0f, 1.0f));
-        GLuint location = glGetUniformLocation(program, "transform");
-        glUniformMatrix4fv(location, 1, false, glm::value_ptr(trans));
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+        // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
+        lastTime = currentTime;
     }
 
     glDeleteVertexArrays(NumVAOs, VAOs);
