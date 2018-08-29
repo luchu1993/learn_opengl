@@ -1,4 +1,5 @@
 /home/alice/Desktop/learn_opengl/CMakeFiles/rebuild_cache.dir
+/home/alice/Desktop/learn_opengl/CMakeFiles/lighting.dir
 /home/alice/Desktop/learn_opengl/CMakeFiles/edit_cache.dir
 /home/alice/Desktop/learn_opengl/CMakeFiles/hello_window.dir
 /home/alice/Desktop/learn_opengl/CMakeFiles/glm_test.dir

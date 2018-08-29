@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named lighting
+
+# Build rule for target.
+lighting: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 lighting
+.PHONY : lighting
+
+# fast build rule for target.
+lighting/fast:
+	$(MAKE) -f CMakeFiles/lighting.dir/build.make CMakeFiles/lighting.dir/build
+.PHONY : lighting/fast
+
+#=============================================================================
 # Target rules for targets named hello_window
 
 # Build rule for target.
@@ -142,6 +155,7 @@ glad/src/glad.o: glad/src/glad.c.o
 
 # target to build an object file
 glad/src/glad.c.o:
+	$(MAKE) -f CMakeFiles/lighting.dir/build.make CMakeFiles/lighting.dir/glad/src/glad.c.o
 	$(MAKE) -f CMakeFiles/hello_window.dir/build.make CMakeFiles/hello_window.dir/glad/src/glad.c.o
 .PHONY : glad/src/glad.c.o
 
@@ -151,6 +165,7 @@ glad/src/glad.i: glad/src/glad.c.i
 
 # target to preprocess a source file
 glad/src/glad.c.i:
+	$(MAKE) -f CMakeFiles/lighting.dir/build.make CMakeFiles/lighting.dir/glad/src/glad.c.i
 	$(MAKE) -f CMakeFiles/hello_window.dir/build.make CMakeFiles/hello_window.dir/glad/src/glad.c.i
 .PHONY : glad/src/glad.c.i
 
@@ -160,6 +175,7 @@ glad/src/glad.s: glad/src/glad.c.s
 
 # target to generate assembly for a file
 glad/src/glad.c.s:
+	$(MAKE) -f CMakeFiles/lighting.dir/build.make CMakeFiles/lighting.dir/glad/src/glad.c.s
 	$(MAKE) -f CMakeFiles/hello_window.dir/build.make CMakeFiles/hello_window.dir/glad/src/glad.c.s
 .PHONY : glad/src/glad.c.s
 
@@ -217,6 +233,33 @@ src/hello_window.cpp.s:
 	$(MAKE) -f CMakeFiles/hello_window.dir/build.make CMakeFiles/hello_window.dir/src/hello_window.cpp.s
 .PHONY : src/hello_window.cpp.s
 
+src/lighting.o: src/lighting.cpp.o
+
+.PHONY : src/lighting.o
+
+# target to build an object file
+src/lighting.cpp.o:
+	$(MAKE) -f CMakeFiles/lighting.dir/build.make CMakeFiles/lighting.dir/src/lighting.cpp.o
+.PHONY : src/lighting.cpp.o
+
+src/lighting.i: src/lighting.cpp.i
+
+.PHONY : src/lighting.i
+
+# target to preprocess a source file
+src/lighting.cpp.i:
+	$(MAKE) -f CMakeFiles/lighting.dir/build.make CMakeFiles/lighting.dir/src/lighting.cpp.i
+.PHONY : src/lighting.cpp.i
+
+src/lighting.s: src/lighting.cpp.s
+
+.PHONY : src/lighting.s
+
+# target to generate assembly for a file
+src/lighting.cpp.s:
+	$(MAKE) -f CMakeFiles/lighting.dir/build.make CMakeFiles/lighting.dir/src/lighting.cpp.s
+.PHONY : src/lighting.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -224,6 +267,7 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
+	@echo "... lighting"
 	@echo "... edit_cache"
 	@echo "... hello_window"
 	@echo "... glm_test"
@@ -236,6 +280,9 @@ help:
 	@echo "... src/hello_window.o"
 	@echo "... src/hello_window.i"
 	@echo "... src/hello_window.s"
+	@echo "... src/lighting.o"
+	@echo "... src/lighting.i"
+	@echo "... src/lighting.s"
 .PHONY : help
 
 

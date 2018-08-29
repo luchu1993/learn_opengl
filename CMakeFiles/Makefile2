@@ -60,6 +60,43 @@ CMAKE_SOURCE_DIR = /home/alice/Desktop/learn_opengl
 CMAKE_BINARY_DIR = /home/alice/Desktop/learn_opengl
 
 #=============================================================================
+# Target rules for target CMakeFiles/lighting.dir
+
+# All Build rule for target.
+CMakeFiles/lighting.dir/all:
+	$(MAKE) -f CMakeFiles/lighting.dir/build.make CMakeFiles/lighting.dir/depend
+	$(MAKE) -f CMakeFiles/lighting.dir/build.make CMakeFiles/lighting.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/alice/Desktop/learn_opengl/CMakeFiles --progress-num=6,7,8 "Built target lighting"
+.PHONY : CMakeFiles/lighting.dir/all
+
+# Include target in all.
+all: CMakeFiles/lighting.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/lighting.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alice/Desktop/learn_opengl/CMakeFiles 3
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/lighting.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alice/Desktop/learn_opengl/CMakeFiles 0
+.PHONY : CMakeFiles/lighting.dir/rule
+
+# Convenience name for target.
+lighting: CMakeFiles/lighting.dir/rule
+
+.PHONY : lighting
+
+# clean rule for target.
+CMakeFiles/lighting.dir/clean:
+	$(MAKE) -f CMakeFiles/lighting.dir/build.make CMakeFiles/lighting.dir/clean
+.PHONY : CMakeFiles/lighting.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/lighting.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
 # Target rules for target CMakeFiles/hello_window.dir
 
 # All Build rule for target.
